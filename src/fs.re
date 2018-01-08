@@ -168,6 +168,36 @@ let writeString = (~fd, ~string, ~offset, ~length) =>
 let writeStringSync = (~fd, ~string, ~offset, ~length) =>
   Unix.write_substring(fd, string, offset, length);
 
-let writeFile = (~file, ~data, ~options) => ();
+type writeFileOptions = {
+  encoding: option(string),
+  mode: option(asyncFilePerm),
+  flags: list(asyncOpenFlag)
+};
 
-let writeFileSync = (~file, ~data, ~options) => ();
+let defaultWriteFileFlags = [Unix.O_CREAT, Unix.O_TRUNC];
+
+let writeFile = (~options={encoding: None, mode: None, flags: []}, ~file, ~data) => {
+  let flags = List.length(options.flags) < 1 ? defaultWriteFileFlags : options.flags;
+  let mode = RenodeUtils.withDefault(options.mode, ~default=438);
+  Lwt.bind(
+    Lwt_unix.openfile(file, flags, mode),
+    fd => Lwt.bind(
+      write(fd, data, 0, Bytes.length(data)),
+      (_) => close(fd)
+    )
+  )
+};
+
+type writeFileSyncOptions = {
+  encoding: option(string),
+  mode: option(syncFilePerm),
+  flags: list(syncOpenFlag)
+};
+
+let writeFileSync = (~options={encoding: None, mode: None, flags: []}, ~file, ~data) => {
+  let flags = List.length(options.flags) < 1 ? defaultWriteFileFlags : options.flags;
+  let mode = RenodeUtils.withDefault(options.mode, ~default=438);
+  let fd = Unix.openfile(file, flags, mode);
+  let _ = writeSync(fd, data, 0, Bytes.length(data));
+  closeSync(fd);
+};

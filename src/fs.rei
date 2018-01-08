@@ -363,24 +363,20 @@ let writeString:
 let writeStringSync:
   (~fd: syncFileDescr, ~string: string, ~offset: int, ~length: int) => int;
 
-[@ocaml.deprecated
-  {|
-    Fs.writeFile has yet to be implemented.
-    Please open a Work-In-Progress pull request if you are interested in contributing.
-    We will help answer questions and push you in the right direction.
+type writeFileOptions = {
+  encoding: option(string),
+  mode: option(asyncFilePerm),
+  flags: list(asyncOpenFlag)
+};
 
-    Repo URL: https://github.com/kennetpostigo/lwt-node
-  |}
-]
-let writeFile: (~file: 'a, ~data: 'b, ~options: 'c) => unit;
+let writeFile:
+  (~options: writeFileOptions=?, ~file: string, ~data: bytes) => Node.t(unit);
 
-[@ocaml.deprecated
-  {|
-    Fs.writeFileSync has yet to be implemented.
-    Please open a Work-In-Progress pull request if you are interested in contributing.
-    We will help answer questions and push you in the right direction.
+type writeFileSyncOptions = {
+  encoding: option(string),
+  mode: option(syncFilePerm),
+  flags: list(syncOpenFlag)
+};
 
-    Repo URL: https://github.com/kennetpostigo/lwt-node
-  |}
-]
-let writeFileSync: (~file: 'a, ~data: 'b, ~options: 'c) => unit;
+let writeFileSync:
+  (~options: writeFileSyncOptions=?, ~file: string, ~data: bytes) => unit;

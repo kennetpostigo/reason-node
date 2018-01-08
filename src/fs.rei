@@ -90,15 +90,6 @@ let fchownSync: (~fd: syncFileDescr, ~uid: int, ~gid: int) => unit;
 
 let fdatasync: asyncFileDescr => Node.t(unit);
 
-[@ocaml.deprecated
-  {|
-    Fs.fdatasyncSync has yet to be implemented.
-    Please open a Work-In-Progress pull request if you are interested in contributing.
-    We will help answer questions and push you in the right direction.
-
-    Repo URL: https://github.com/kennetpostigo/reason-node
-  |}
-]
 let fdatasyncSync: syncFileDescr => unit;
 
 let fstat: asyncFileDescr => Node.t(asyncStats);
@@ -107,15 +98,6 @@ let fstatSync: syncFileDescr => syncStats;
 
 let fsync: asyncFileDescr => Node.t(unit);
 
-[@ocaml.deprecated
-  {|
-    Fs.fsyncSync has yet to be implemented.
-    Please open a Work-In-Progress pull request if you are interested in contributing.
-    We will help answer questions and push you in the right direction.
-
-    Repo URL: https://github.com/kennetpostigo/reason-node
-  |}
-]
 let fsyncSync: syncFileDescr => unit;
 
 let ftruncate: (~len: int=?, Lwt_unix.file_descr) => Node.t(unit);

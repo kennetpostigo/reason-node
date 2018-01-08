@@ -54,7 +54,9 @@ let fchownSync = (~fd, ~uid, ~gid) => Unix.fchown(fd, uid, gid);
 
 let fdatasync = fd => Lwt_unix.fdatasync(fd);
 
-let fdatasyncSync = fd => ();
+let fdatasyncSync = fd => Lwt_unix.of_unix_file_descr(fd)
+  |> fdatasync
+  |> Node.run;
 
 let fstat = fd => Lwt_unix.fstat(fd);
 
@@ -62,7 +64,9 @@ let fstatSync = fd => Unix.fstat(fd);
 
 let fsync = fd => Lwt_unix.fsync(fd);
 
-let fsyncSync = fd => ();
+let fsyncSync = fd => Lwt_unix.of_unix_file_descr(fd)
+  |> fsync
+  |> Node.run;
 
 let ftruncate = (~len=0, fd) => Lwt_unix.ftruncate(fd, len);
 

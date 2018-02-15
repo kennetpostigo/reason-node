@@ -199,3 +199,8 @@ let iterPathUntil = (~condition, ~list, ~f) => {
     position := position^ - 1;
   };
 };
+
+let withDefault = (opt, ~default) => switch opt {
+| Some(v) => v
+| None => default
+};
